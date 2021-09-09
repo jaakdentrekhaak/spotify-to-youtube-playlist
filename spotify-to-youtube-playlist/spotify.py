@@ -6,11 +6,11 @@ import base64
 def get_access_token():
     """Retrieve the access token needed for communicating with the Spotify API.
     The client-id and the client-secret from the config.json file are used for this (also see README).
+    More information about this process can be found here: https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow.
 
     Returns:
         string: Spotify API access token
     """
-    # https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow
     with open('config.json', 'r') as config_file:
         conf = json.load(config_file)
         client_id = conf['spotify']['client_id']
@@ -34,7 +34,8 @@ def get_access_token():
 
 
 def get_track_names_from_playlist(playlist_id: str):
-    """Get the titles and artists for all the songs for the Spotify playlist with the given id
+    """Get the titles and artists for all the songs for the Spotify playlist with the given id.
+    More information can be found here: https://developer.spotify.com/console/get-playlist/
 
     Args:
         playlist_id (string): id of the Spotify playlist
