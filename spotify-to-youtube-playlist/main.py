@@ -1,9 +1,30 @@
 from spotify import get_track_names_from_playlist
-from youtube import get_video_ids_from_track_names, get_video_ids_from_track_names_without_api
+from youtube import get_video_ids_from_track_names, add_videos_to_playlist
+import json
 
-playlist_id = '4bOzSOi1cOpuTpXAa0j2JJ'
+# Open the settings file
+with open('settings.json', 'r') as settings_file:
+    settings = json.load(settings_file)
 
-tracks = get_track_names_from_playlist(playlist_id)
+# # Get the track names and artist names for the songs in a Spotify playlist
+# tracks = get_track_names_from_playlist(settings['Spotify_playlist_id'])
 
-# print(get_video_ids_from_track_names(tracks))
-print(get_video_ids_from_track_names_without_api(tracks))
+# # Get the YouTube video ids corresponding to the songs in the Spotify playlist
+# video_ids = get_video_ids_from_track_names(tracks)
+
+# # Add the YouTube videos to a playlist
+# add_videos_to_playlist(
+#     settings['YouTube_playlist_id'],
+#     video_ids,
+#     settings['Authorization'],
+#     settings['Cookie'],
+#     settings['Key']
+# )
+
+add_videos_to_playlist(
+    settings['YouTube_playlist_id'],
+    [],
+    settings['Authorization'],
+    settings['Cookie'],
+    settings['Key']
+)

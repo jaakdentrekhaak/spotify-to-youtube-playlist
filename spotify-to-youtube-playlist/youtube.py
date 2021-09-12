@@ -3,7 +3,7 @@ import json
 import urllib.parse
 
 
-def get_video_ids_from_track_names(track_names: list):
+def get_video_ids_from_track_names_with_api(track_names: list):
     """Retrieve the video ids from the songs for which the names are given in the input list.
 
     Args:
@@ -40,7 +40,7 @@ def get_video_ids_from_track_names(track_names: list):
     return video_ids
 
 
-def get_video_ids_from_track_names_without_api(track_names: list):
+def get_video_ids_from_track_names(track_names: list):
     """Retrieve the video ids from the songs for which the names are given in the input list.
     This approach does not use the YouTube API. The YouTube API has a limit on requests per day which is quite low.
 
@@ -65,6 +65,38 @@ def get_video_ids_from_track_names_without_api(track_names: list):
     return video_ids
 
 
-def add_videos_to_playlist():
-    pass
-    # Too difficult if not using the API
+def add_videos_to_playlist(playlist_id: str, video_ids: list, auth: str, cookie: str, key: str):
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0",
+        "Content-Type": "application/json",
+        "Authorization": auth,
+        "Origin": "https://www.youtube.com",
+        "Cookie": cookie
+    }
+
+    body = {
+        'playlistId': playlist_id,
+        'actions': [
+            {
+                'action': 'ACTION_ADD_VIDEO',
+                'addedVideoId': 'l0U7SxXHkPY'
+            }
+        ]
+    }
+
+    context = {
+        "context": {
+            "client": {
+                "clientName": "WEB_REMIX",
+                "clientVersion": "0.1",
+            },
+        }
+    }
+
+    body.update(context)
+
+    response = requests.post(f'https://www.youtube.com/youtubei/v1/browse/edit_playlist?key={key}',
+                             json=body,
+                             headers=headers)
+    print(response)
