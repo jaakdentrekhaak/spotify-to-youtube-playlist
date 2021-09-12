@@ -32,7 +32,7 @@ To run authenticated requests you need to set up you need to copy your request h
 - Go to https://www.youtube.com and ensure you are logged in
 - Find an authenticated POST request. The simplest way is to filter by '/browse' using the search bar 'Filter URLs' of the developer tools and select the POST request (if you don't see the request, just select one of the POST requests) and go to the 'Headers' tab.
 
-In the 'Headers' tab, first copy the authentication key which can be found inside the URL where the POST request is made to and add it to the field 'Key' in the file `settings.json` in the root folder of this project. Head back to the browser and in the 'Headers' tab, scroll down to the 'Request Headers' and copy the values for the 'Authorization' and 'Cookie' fields and also add them to the `settings.json` file to the fields "Authorization" and "Cookie" respectively.
+In the 'Headers' tab, first copy the authentication key which can be found inside the URL where the POST request is made to and add it to the field 'Key' in the file `settings.json` in the root folder of this project. Head back to the browser and in the 'Headers' tab, scroll down to the 'Request Headers', enable 'Raw' view (important) and copy the values for the 'Authorization' and 'Cookie' fields and also add them to the `settings.json` file to the fields "Authorization" and "Cookie" respectively.
 
 The `settings.json` file in the root folder looks like this, where you have to replace the values:
 ```json

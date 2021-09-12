@@ -133,3 +133,47 @@ def add_videos_to_playlist(playlist_id: str, video_ids: list, auth: str, cookie:
                              headers=headers)
 
     return response.status_code
+
+
+def create_playlist(title: str, public: bool, auth: str, cookie: str, key: str) -> str:
+    """Create a YouTube playlist with the given title.
+
+    Args:
+        title (str): title for the YouTube playlist
+        public (bool): whether or not this playlist needs to be public
+        auth (str): HTTP header needed for authorization
+        cookie (str): HTTP header needed for authorization
+        key (str): key needed for authorization
+
+    Returns:
+        str: the ID of the created playlist
+    """
+    headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0",
+        "Content-Type": "application/json",
+        "Authorization": auth,
+        "Origin": "https://www.youtube.com",
+        "Cookie": cookie
+    }
+
+    body = {
+        'privacyStatus': 'PUBLIC' if public == True else 'PRIVATE',
+        'title': title,
+    }
+
+    context = {
+        "context": {
+            "client": {
+                "clientName": "WEB_REMIX",
+                "clientVersion": "0.1",
+            },
+        }
+    }
+
+    body.update(context)
+
+    response = requests.post(f'https://www.youtube.com/youtubei/v1/playlist/create?key={key}',
+                             json=body,
+                             headers=headers)
+
+    return response.json()['playlistId']
