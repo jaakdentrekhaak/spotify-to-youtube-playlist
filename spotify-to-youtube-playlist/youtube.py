@@ -3,7 +3,7 @@ import json
 import urllib.parse
 
 
-def get_video_ids_from_track_names_with_api(track_names: list):
+def get_video_ids_from_track_names_with_api(track_names: list) -> list:
     """Retrieve the video ids from the songs for which the names are given in the input list.
 
     Args:
@@ -40,9 +40,26 @@ def get_video_ids_from_track_names_with_api(track_names: list):
     return video_ids
 
 
-def get_video_ids_from_track_names(track_names: list):
+def progbar(curr, total, full_progbar):
+    """Print progress bar. Source: https://geekyisawesome.blogspot.com/2016/07/python-console-progress-bar-using-b-and.html
+
+    Args:
+        curr (int): current iteration
+        total (int): total iterations
+        full_progbar (int): size of the progress bar
+    """
+    frac = curr/total
+    filled_progbar = round(frac*full_progbar)
+    print('\r', '#'*filled_progbar + '-'*(full_progbar -
+          filled_progbar), '[{:>7.2%}]'.format(frac), end='')
+    if curr == total:
+        print('\n')
+
+
+def get_video_ids_from_track_names(track_names: list) -> list:
     """Retrieve the video ids from the songs for which the names are given in the input list.
     This approach does not use the YouTube API. The YouTube API has a limit on requests per day which is quite low.
+    This function searches YouTube for the name and artist of a song and searches for the video ID inside an HTML file.
 
     Args:
         track_names (list): list containing string with the song titles and artist names
@@ -54,18 +71,33 @@ def get_video_ids_from_track_names(track_names: list):
 
     video_ids = []
 
+    counter = 1
     for tn in track_names:
+        progbar(counter, len(track_names), 20)
         query = urllib.parse.quote_plus(tn)
         response = requests.get(
             f'https://www.youtube.com/results?search_query={query}')
         raw_body_str = response.text
         cut = raw_body_str.split(prefix)[1]
         video_ids.append(cut.split('"')[0])
+        counter += 1
 
     return video_ids
 
 
-def add_videos_to_playlist(playlist_id: str, video_ids: list, auth: str, cookie: str, key: str):
+def add_videos_to_playlist(playlist_id: str, video_ids: list, auth: str, cookie: str, key: str) -> int:
+    """Add YouTube videos corresponding to the given video ids to a playlist with the given playlist id.
+
+    Args:
+        playlist_id (str): ID of a YouTube playlist you want to add videos to (your own playlist)
+        video_ids (list): list with IDs of the videos you want to add to the playlist
+        auth (str): HTTP header needed for authorization
+        cookie (str): HTTP header needed for authorization
+        key (str): key needed for authorization
+
+    Returns:
+        int: status code for the HTTP request to YouTube
+    """
 
     headers = {
         "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0",
@@ -80,8 +112,8 @@ def add_videos_to_playlist(playlist_id: str, video_ids: list, auth: str, cookie:
         'actions': [
             {
                 'action': 'ACTION_ADD_VIDEO',
-                'addedVideoId': 'l0U7SxXHkPY'
-            }
+                'addedVideoId': video_id
+            } for video_id in video_ids
         ]
     }
 
@@ -99,4 +131,5 @@ def add_videos_to_playlist(playlist_id: str, video_ids: list, auth: str, cookie:
     response = requests.post(f'https://www.youtube.com/youtubei/v1/browse/edit_playlist?key={key}',
                              json=body,
                              headers=headers)
-    print(response)
+
+    return response.status_code

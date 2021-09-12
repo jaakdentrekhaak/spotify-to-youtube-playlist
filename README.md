@@ -56,3 +56,6 @@ Add this to the `config.json` file, where you have to replace the value:
     }
 }
 ```
+
+# Development
+NOTE: the files config.json and settings.json are ignored by git after pushing the first 'default' version, see [here](https://stackoverflow.com/questions/18276951/how-do-i-stop-git-from-tracking-any-changes-to-a-file-from-this-commit-forward)

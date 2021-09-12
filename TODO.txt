@@ -1,1 +1,2 @@
 - add support for private playlists (requires login credentials for Spotify)
+- add option for creating new playlist
