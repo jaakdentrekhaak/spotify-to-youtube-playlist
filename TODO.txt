@@ -1,2 +1,3 @@
 - add support for private playlists (requires login credentials for Spotify)
 - add option for creating new playlist
+- split the 'add_videos_to_playlist' function in multiple requests from size 50

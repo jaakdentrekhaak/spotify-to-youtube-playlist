@@ -21,7 +21,7 @@ The only thing the Spotify part needs, apart from the client_id and client_secre
 If we got the names of the songs and artists from the Spotify API, we have to search the corresponding video on YouTube. This part happens automatically by this program.
 
 ## Adding video to playlist
-Once the video ids for all the songs are retrieved, we have to add these songs to our playlist. This program assumes you already created a YouTube playlist on your account. The playlist ID can be found by going to your playlist on YouTube and inspecting the URL. If the URL looks like 'https://www.youtube.com/playlist?list=PL633QL57LZ0W7wiYJE3p7z6OvpYmiUu7r', then the ID is 'PL633QL57LZ0W7wiYJE3p7z6OvpYmiUu7r'. Add this playlist ID to the field 'YouTube_playlist_id' in the file `settings.json` in the root folder of this project.
+Once the video ids for all the songs are retrieved, we have to add these songs to our playlist. You can choose to automatically create a new playlist or add songs to an existing playlist. To add the videos to an existing playlist, add the playlist ID to the 'YouTube_playlist_id' field . The playlist ID can be found by going to your playlist on YouTube and inspecting the URL. If the URL looks like 'https://www.youtube.com/playlist?list=PL633QL57LZ0W7wiYJE3p7z6OvpYmiUu7r', then the ID is 'PL633QL57LZ0W7wiYJE3p7z6OvpYmiUu7r'. To let the program create a new playlist, the value of the field 'YouTube_playlist_id' in the file `settings.json` doesn't matter.
 
 ### Authentication
 Adding songs to a playlist requires you to be logged in to your account. That's why you first need to login to YouTube on your normal browser. The following strategy comes from [ytmusicapi](https://github.com/sigma67/ytmusicapi).

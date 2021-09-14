@@ -43,7 +43,7 @@ def get_track_names_from_playlist(playlist_id: str) -> list:
     Returns:
         list: list containing the track names of all the songs in the Spotify playlist with the given id
     """
-    playlist_url = f'https://api.spotify.com/v1/playlists/{playlist_id}'
+    playlist_url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
 
     token = get_access_token()
 
@@ -56,7 +56,18 @@ def get_track_names_from_playlist(playlist_id: str) -> list:
     playlist_response = requests.get(playlist_url, headers=headers)
 
     response_json = json.loads(playlist_response.content)
-    tracks_json = response_json['tracks']['items']
+    tracks_json: list = response_json['items']
+
+    # Spotify only returns the first 100 tracks of a playlist, so we can iterate with an offset, see https://developer.spotify.com/console/get-current-user-playlists/
+    offset_counter = 1
+    while len(response_json['items']) >= 100 and offset_counter < 4:
+        playlist_url_offset = playlist_url + \
+            '?offset=' + str(offset_counter*100)
+        response_json = json.loads(requests.get(
+            playlist_url_offset, headers=headers).content)
+        tracks_json.extend(response_json['items'])
+        offset_counter += 1
+
     tracks = []
 
     for t in tracks_json:
