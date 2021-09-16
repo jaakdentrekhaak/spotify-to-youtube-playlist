@@ -107,35 +107,31 @@ def add_videos_to_playlist(playlist_id: str, video_ids: list, auth: str, cookie:
         "Cookie": cookie
     }
 
-    # Split request into multiple requests with each adding 50 videos to a playlist
-    video_ids_split = [video_ids[i:i+50]
-                       for i in range(0, len(video_ids), 50)]
+    body = {
+        'playlistId': playlist_id,
+        'actions': [
+            {
+                'action': 'ACTION_ADD_VIDEO',
+                'addedVideoId': v,
+                'dedupeOption': 'DEDUPE_OPTION_SKIP'  # Else returns error when duplicate found
+            } for v in video_ids
+        ]
+    }
 
-    for v in video_ids_split:
-        body = {
-            'playlistId': playlist_id,
-            'actions': [
-                {
-                    'action': 'ACTION_ADD_VIDEO',
-                    'addedVideoId': video_id
-                } for video_id in v
-            ]
+    context = {
+        "context": {
+            "client": {
+                "clientName": "WEB_REMIX",
+                "clientVersion": "0.1",
+            },
         }
+    }
 
-        context = {
-            "context": {
-                "client": {
-                    "clientName": "WEB_REMIX",
-                    "clientVersion": "0.1",
-                },
-            }
-        }
+    body.update(context)
 
-        body.update(context)
-
-        response = requests.post(f'https://www.youtube.com/youtubei/v1/browse/edit_playlist?key={key}',
-                                 json=body,
-                                 headers=headers)
+    response = requests.post(f'https://www.youtube.com/youtubei/v1/browse/edit_playlist?key={key}',
+                             json=body,
+                             headers=headers)
 
     return response.status_code
 
